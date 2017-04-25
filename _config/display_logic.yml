@@ -20,9 +20,12 @@ UncleCheese\DisplayLogic\DisplayLogicCriteria:
     - slide
     - fade
   default_animation: toggle
-    
+
 SilverStripe\Forms\FormField:
   extensions:
     - UncleCheese\DisplayLogic\Extension\DisplayLogicFormField
 DisplayLogic:
   jquery_included: true
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    - 'display_logic/javascript/display_logic.js'
