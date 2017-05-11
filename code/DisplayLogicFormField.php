@@ -15,7 +15,7 @@ use SilverStripe\Core\Config\Config;
  */
 class DisplayLogicFormField extends DataExtension {
 
-	
+
 
 	/**
 	 * The {@link DisplayLogicCriteria} that is evaluated to determine whether this field should display
@@ -108,7 +108,7 @@ class DisplayLogicFormField extends DataExtension {
 	 */
 	public function DisplayLogicMasters() {
 		if($this->displayLogicCriteria) {
-			return implode(",",array_unique($this->displayLogicCriteria->getMasterList()));			
+			return implode(",",array_unique($this->displayLogicCriteria->getMasterList()));
 		}
 	}
 
@@ -132,19 +132,27 @@ class DisplayLogicFormField extends DataExtension {
 	 */
 	public function DisplayLogic() {
 		if($this->displayLogicCriteria) {
-			if(!Config::inst()->get('DisplayLogic', 'jquery_included')) {
+			if(!$this->owner->config()->get('jquery_included')) {
 				Requirements::javascript(ADMIN_THIRDPARTY_DIR.'/jquery/jquery.js');
 			}
-			Requirements::javascript(ADMIN_THIRDPARTY_DIR.'/jquery-entwine/dist/jquery.entwine-dist.js');
-			Requirements::javascript(DISPLAY_LOGIC_DIR.'/javascript/display_logic.js');
+
+            if(!$this->owner->config()->get( 'entwine_included')) {
+			    Requirements::javascript(ADMIN_THIRDPARTY_DIR.'/jquery-entwine/dist/jquery.entwine-dist.js');
+            }
+
+            if(!$this->owner->config()->get( 'display_logic_included')) {
+			    Requirements::javascript(DISPLAY_LOGIC_DIR.'/javascript/display_logic.js');
+            }
+
 			Requirements::css(DISPLAY_LOGIC_DIR.'/css/display_logic.css');
+
 			return $this->displayLogicCriteria->toScript();
 		}
-		
+
 		return false;
 	}
 	public function onBeforeRender($field) {
-		if($logic = $field->DisplayLogic()) {			
+		if($logic = $field->DisplayLogic()) {
 			$field->setAttribute('data-display-logic-masters', $field->DisplayLogicMasters());
 			$field->setAttribute('data-display-logic-eval', $logic);
 			$field->setAttribute('data-display-logic-animation', $field->DisplayLogicAnimation());

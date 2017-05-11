@@ -24,8 +24,8 @@ UncleCheese\DisplayLogic\DisplayLogicCriteria:
 SilverStripe\Forms\FormField:
   extensions:
     - UncleCheese\DisplayLogic\Extension\DisplayLogicFormField
-DisplayLogic:
   jquery_included: true
+  entwine_included: true
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_javascript:
     - 'display_logic/javascript/display_logic.js'
