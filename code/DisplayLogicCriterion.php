@@ -2,7 +2,9 @@
 
 namespace UncleCheese\DisplayLogic;
 
-use SilverStripe\Core\Object;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Config\Configurable;
 
 /**
  *  Defines a criterion that controls the display of a given
@@ -11,8 +13,10 @@ use SilverStripe\Core\Object;
  * @package  display_logic
  * @author  Uncle Cheese <unclecheese@leftandmain.com>
  */
-class DisplayLogicCriterion extends Object {
-
+class DisplayLogicCriterion {
+    use Extensible;
+    use Injectable;
+    use Configurable;
 
 	/**
 	 * The name of the form field that is controlling the display
@@ -56,7 +60,6 @@ class DisplayLogicCriterion extends Object {
 	 * @param DisplayLogicCriteria $set      The parent criteria set
 	 */
 	public function __construct($master, $operator, $value, DisplayLogicCriteria $set) {
-		parent::__construct();
 		$this->master = $master;
 		$this->operator = $operator;
 		$this->value = $value;
@@ -87,7 +90,7 @@ class DisplayLogicCriterion extends Object {
 	 * Creates a JavaScript-readable representation of this criterion
 	 * @return string
 	 */
-	public function toScript() {		
+	public function toScript() {
 		return sprintf(
 			"this.findHolder('%s').evaluate%s('%s')",
 			$this->master,

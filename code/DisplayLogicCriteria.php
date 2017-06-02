@@ -3,8 +3,10 @@
 namespace UncleCheese\DisplayLogic;
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Object;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Config\Configurable;
 
 /**
  *  Defines a set of criteria that control the display of a given
@@ -13,8 +15,10 @@ use SilverStripe\Forms\FormField;
  * @package  display_logic
  * @author  Uncle Cheese <unclecheese@leftandmain.com>
  */
-class DisplayLogicCriteria extends Object {
-
+class DisplayLogicCriteria {
+    use Extensible;
+    use Injectable;
+    use Configurable;
 
 	/**
 	 * The name of the form field that depends on the criteria
@@ -83,10 +87,10 @@ class DisplayLogicCriteria extends Object {
 	 * @param [type]    $parent The parent {@link DisplayLogicCriteria}
 	 */
 	public function __construct(FormField $slave, $master, $parent = null) {
-		parent::__construct();
 		$this->slave = $slave;
 		$this->master = $master;
 		$this->parent = $parent;
+
 		return $this;
 	}
 
@@ -99,9 +103,9 @@ class DisplayLogicCriteria extends Object {
 	 * @param  array $args The arguments
 	 * @return  DisplayLogicCriteria
 	 */
-	public function __call($method, $args) {		
-		if(in_array($method, $this->config()->comparisons)) {		
-			$val = isset($args[0]) ? $args[0] : null;				
+	public function __call($method, $args) {
+		if(in_array($method, $this->config()->comparisons)) {
+			$val = isset($args[0]) ? $args[0] : null;
 			if(substr($method, 0, 2) == "is") {
 				$operator = substr($method, 2);
 			}
@@ -111,7 +115,7 @@ class DisplayLogicCriteria extends Object {
 
 			$this->addCriterion(DisplayLogicCriterion::create($this->master, $operator, $val, $this));
 			return $this;
-		}		
+		}
 		return parent::__call($method, $args);
 	}
 
@@ -124,7 +128,7 @@ class DisplayLogicCriteria extends Object {
 	 * @param  int  $max The maxiumum value
 	 * @return DisplayLogicCriteria
 	 */
-	public function isBetween($min, $max) {		
+	public function isBetween($min, $max) {
 		$this->addCriterion(DisplayLogicCriterion::create($this->master, "Between", "{$min}-{$max}", $this));
 		return $this;
 	}
@@ -169,7 +173,7 @@ class DisplayLogicCriteria extends Object {
 	 * Adds a new criterion
 	 * @param DisplayLogicCriterion|DisplayLogicCriteria $c
 	 */
-	public function addCriterion($c) {		
+	public function addCriterion($c) {
 		$this->criteria[] = $c;
 	}
 
@@ -271,7 +275,7 @@ class DisplayLogicCriteria extends Object {
 
 
 	/**
-	 * Creates a JavaScript readable representation of the logic	 
+	 * Creates a JavaScript readable representation of the logic
 	 * @return string
 	 */
 	public function toScript() {
@@ -281,7 +285,7 @@ class DisplayLogicCriteria extends Object {
 			$script .= $first ? "" :  " {$this->getLogicalOperator()} ";
 			$script .= $c->toScript();
 			$first = false;
-		}	
+		}
 		$script .= ")";
 		return $script;
 	}
