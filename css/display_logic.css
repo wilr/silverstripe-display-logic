@@ -1,1 +1,3 @@
-div.field.display-logic-hidden, div.displaylogicwrapper.display-logic-hidden {display:none;}
+div.field.display-logic-hidden, div.displaylogicwrapper.display-logic-hidden { display:none; }
+
+.cms-edit-form .form-group div.field.display-logic-hidden, div.displaylogicwrapper.display-logic-hidden { display:none; }
